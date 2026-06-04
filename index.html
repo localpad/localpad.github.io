@@ -59,7 +59,7 @@ async function save() {
   const root = await navigator.storage.getDirectory();
   const filehandle = await root.getFileHandle($filename.value, { create: true });
   const filewritable = await filehandle.createWritable();
-  await filewritable.write($maintext.textContent);
+  await filewritable.write($maintext.innerText);
   await filewritable.close();
   if ($filelist.textContent) list();
   window.history.pushState(null, '', '?file=' + $filename.value);
@@ -68,7 +68,7 @@ async function load() {
   const root = await navigator.storage.getDirectory();
   const filehandle = await root.getFileHandle($filename.value);
   const file = await filehandle.getFile();
-  $maintext.textContent = await file.text();
+  $maintext.innerText = await file.text();
   window.history.pushState(null, '', '?file=' + $filename.value);
 }
 async function list() {
