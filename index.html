@@ -76,7 +76,7 @@ async function list() {
   const root = await navigator.storage.getDirectory();
   for await (const [name, handle] of root.entries()) {
     if (handle.kind === 'file') {
-        str += '<li onclick="kill(event)"><a onclick="event.stopPropagation();" href="?file=' + name + '">' + name + ' (' + (await handle.getFile()).size + ' bytes)</a></li>';
+        str += '<li onclick="kill(event)"><a onclick="event.stopPropagation();" href="?file=' + name + '">' + name + '</a></li>';
     }
   }
   $filelist.innerHTML = str ? str : '(empty)';
@@ -85,7 +85,7 @@ async function kill(e) {
   const name = e.target.textContent;
   if (!confirm('Delete ' + e.target.textContent + '?')) return;
   const root = await navigator.storage.getDirectory();
-  await root.removeEntry(name, { recursive: true });
+  await root.removeEntry(name);
   list();
 }
 </script>
