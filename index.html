@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<link rel="manifest" href="app.webmanifest">
 <style>
 :root {
   line-height: 1.75;
@@ -46,6 +47,9 @@ const args = new URLSearchParams(document.location.search);
 if (args.get('file')) {
   $filename.value = args.get('file');
   load();
+}
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
 }
 async function save() {
   const root = await navigator.storage.getDirectory();
