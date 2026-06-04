@@ -40,7 +40,7 @@ main {
 <button onclick="save()">Save</button>
 <button onclick="list()">List</button>
 <pre><ul class="filelist" id="$filelist"></ul></pre>
-<main><article contenteditable="plaintext-only" id="$article"></article></main>
+<main onclick="$article.focus()"><article contenteditable="plaintext-only" id="$article" autofocus></article></main>
 <script>
 const args = new URLSearchParams(document.location.search);
 if (args.get('file')) {
