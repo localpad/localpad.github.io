@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <link rel="manifest" href="app.webmanifest">
 <style>
 :root {
@@ -41,8 +42,11 @@ main {
 <button onclick="save()">Save</button>
 <button onclick="list()">List</button>
 <pre><ul class="filelist" id="$filelist"></ul></pre>
-<main onclick="$article.focus()"><article contenteditable="plaintext-only" id="$article" autofocus></article></main>
+<main onclick="$maintext.focus()"><article contenteditable="plaintext-only" id="$maintext" autofocus></article></main>
 <script>
+const $filename = document.getElementById('$filename');
+const $filelist = document.getElementById('$filelist');
+const $maintext = document.getElementById('$maintext');
 const args = new URLSearchParams(document.location.search);
 if (args.get('file')) {
   $filename.value = args.get('file');
@@ -55,7 +59,7 @@ async function save() {
   const root = await navigator.storage.getDirectory();
   const filehandle = await root.getFileHandle($filename.value, { create: true });
   const filewritable = await filehandle.createWritable();
-  await filewritable.write($article.textContent);
+  await filewritable.write($maintext.textContent);
   await filewritable.close();
   if ($filelist.textContent) list();
   window.history.pushState(null, '', '?file=' + $filename.value);
@@ -64,7 +68,7 @@ async function load() {
   const root = await navigator.storage.getDirectory();
   const filehandle = await root.getFileHandle($filename.value);
   const file = await filehandle.getFile();
-  $article.textContent = await file.text();
+  $maintext.textContent = await file.text();
   window.history.pushState(null, '', '?file=' + $filename.value);
 }
 async function list() {
@@ -72,7 +76,7 @@ async function list() {
   const root = await navigator.storage.getDirectory();
   for await (const [name, handle] of root.entries()) {
     if (handle.kind === 'file') {
-        str += '<li onclick="kill(event)"><a onclick="event.stopPropagation();" href="?file=' + name + '">' + name + '</a></li>';
+        str += '<li onclick="kill(event)"><a onclick="event.stopPropagation();" href="?file=' + name + '">' + name + ' (' + (await handle.getFile()).size + ' bytes)</a></li>';
     }
   }
   $filelist.innerHTML = str ? str : '(empty)';
