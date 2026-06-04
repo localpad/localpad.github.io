@@ -54,6 +54,7 @@ async function save() {
   await filewritable.write($article.textContent);
   await filewritable.close();
   if ($filelist.textContent) list();
+  window.history.pushState(null, '', '?file=' + $filename.value);
 }
 async function load() {
   const root = await navigator.storage.getDirectory();
